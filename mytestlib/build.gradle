@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+
+//group repositoryGroup
+////version 1.0.0.301
+//version  '1.0.11-SNAPSHOT' //表示测试版，正式发版时去掉“-SNAPSHOT”
+
+//打成aar格式
+//apply from: rootProject.getRootDir().getAbsolutePath() + "/maven_upload.gradle" //引用上传插件
+
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "26.0.2"
+
+    publishNonDefault true
+
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:27.1.1'
+}

@@ -1,0 +1,77 @@
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: releaseRepositoryUrl) {
+                authentication(userName: mavenUserName, password: mavenPassword)
+
+                println "开始上传release >>>"
+
+            }
+            snapshotRepository(url: snapshotRepositoryUrl) {
+                authentication(userName: mavenUserName, password: mavenPassword)
+
+                println "开始上传snapshot >>>"
+
+            }
+            def curArtifactId = ""
+
+            android.libraryVariants.all { variant ->
+                def _flavorBuildTypeName = variant.name
+
+                println "build type: _flavorBuildTypeName = " + _flavorBuildTypeName
+
+                def artifactId = getArtifactId(project)
+
+                if (artifactId != curArtifactId) {
+
+                    addFilter(_flavorBuildTypeName) { artifact, file ->
+                        true
+                    }
+
+                    println "build type: artifactId = " + artifactId
+
+
+                    pom(_flavorBuildTypeName).groupId = repositoryGroup
+                    pom(_flavorBuildTypeName).artifactId = artifactId
+                    pom(_flavorBuildTypeName).version = "1.0.3-SNAPSHOT"
+                    pom(_flavorBuildTypeName).name = artifactId
+                    pom(_flavorBuildTypeName).packaging = 'aar'
+
+                    curArtifactId = artifactId
+
+                } else {
+                    println "has the same artifactId." + curArtifactId
+                }
+            }
+        }
+
+
+    }
+}
+
+// logic_account_china_hms
+static def getArtifactId(project) {
+    def name = ""
+    while (null != project.parent) {
+        // 过滤掉impl的工程名
+        if (!"impl".equalsIgnoreCase(project.name)) {
+            // Ability的工程名改成Base
+            if ("ability".equalsIgnoreCase(project.name)) {
+                name = "base_" + name
+            } else {
+                if (name.empty) {
+                    name = project.name
+                } else {
+                    name = project.name + "_" + name
+                }
+
+            }
+        }
+        project = project.parent
+    }
+
+    return name.toLowerCase()
+}
+

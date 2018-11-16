@@ -1,0 +1,47 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'maven'
+
+    configurations {
+        deployerJars
+    }
+
+    repositories {
+        google()
+        jcenter()
+        maven { url releaseRepositoryUrl }
+        maven { url snapshotRepositoryUrl }
+        maven { url 'http://10.62.233.85:8081/nexus/content/repositories/snapshots/' }
+    }
+}
+
+//task clean(type: Delete) {
+//    delete rootProject.buildDir
+//}
+
+configurations.all {
+    // 每隔0秒检查远程依赖是否存在更新，即不使用缓存，使用仓库中最新的包
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+subprojects {  //表示除主工程外所有子模块
+    dependencies {
+        deployerJars "org.apache.maven.wagon:wagon-http:2.2"
+    }
+}

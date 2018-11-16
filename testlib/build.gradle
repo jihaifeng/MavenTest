@@ -1,0 +1,55 @@
+apply plugin: 'com.android.library'
+
+//打成aar格式
+apply from: rootProject.getRootDir().getAbsolutePath() + "/maven_upload.gradle" //引用上传插件
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "26.0.2"
+    publishNonDefault true
+
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir './src/main/java' //指定源码目录
+            }
+        }
+    }
+
+    flavorDimensions("default")
+    productFlavors{
+
+        aa {
+            dimension "default"
+        }
+
+        bb {
+            dimension "default"
+        }
+
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:27.1.1'
+}
