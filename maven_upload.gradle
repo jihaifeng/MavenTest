@@ -46,9 +46,86 @@ uploadArchives {
                 }
             }
         }
-
-
     }
+
+//    task androidJavadocs(type: Javadoc) {
+//        failOnError false
+//        source = android.sourceSets.main.java.source
+//        options {
+//            encoding "UTF-8"
+//            charSet 'UTF-8'
+//            links "http://docs.oracle.com/javase/7/docs/api/"
+//        }
+//        classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//
+//    }
+//
+//    task androidJavadocsJar(type: Zip, dependsOn: androidJavadocs) {
+//
+//
+//        classifier = 'javadoc'
+//        from androidJavadocs.destinationDir
+//    }
+
+//    task androidSourcesJar(type: Jar) {
+//
+//        classifier = 'sources'
+//
+//
+//        def sourceDirs = new ArrayList()
+//        def sourceDir = android.sourceSets.main.java.srcDirs
+//        sourceDirs.add(sourceDir)
+//
+//        println "base src： " + sourceDir
+//        android.libraryVariants.all { variant ->
+//
+//            println "variant.flavorName： " + variant.flavorName
+//
+//            if (variant.flavorName.empty) {
+//                return
+//            }
+//
+//            def variantSrc = android.sourceSets.(variant.flavorName).java.srcDirs
+//            if (!sourceDirs.contains(variantSrc)) {
+//                sourceDirs.add(variantSrc)
+//            }
+//
+//
+//            def flavors = variant.getProductFlavors()
+//            for (int i = 0; i < flavors.size(); i++) {
+//                if (!variant.flavorName.toLowerCase().contains(flavors[i].name.toLowerCase())) {
+//                    continue
+//                }
+//
+//                def flavorSrc = android.sourceSets.(flavors[i].name).java.srcDirs
+//                println "flavor src1： " + flavorSrc
+//
+//                if (!sourceDirs.contains(flavorSrc)) {
+//                    sourceDirs.add(flavorSrc)
+//                }
+//
+//            }
+//
+//        }
+//        from sourceDirs
+//
+//    }
+
+//    artifacts {
+//        if (project.hasProperty("HVI_SOURCE")) {
+//
+//        println "start packing sources >>>"
+//
+//        archives androidSourcesJar
+//        }
+//
+//        if (project.hasProperty("HVI_JAVADOC")) {
+//            println "start packing JavaDoc >>>"
+//
+//            archives androidJavadocsJar
+//        }
+//    }
 }
 
 // logic_account_china_hms
