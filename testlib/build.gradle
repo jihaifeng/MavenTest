@@ -22,12 +22,26 @@ android {
         main {
             java {
                 srcDir './src/main/java' //指定源码目录
+
             }
+        }
+
+        aa {
+            java {
+                srcDir  './src/aa/java'
+            }
+        }
+
+        bb {
+            java {
+                srcDir './src/bb/java'
+            }
+
         }
     }
 
     flavorDimensions("default")
-    productFlavors{
+    productFlavors {
 
         aa {
             dimension "default"

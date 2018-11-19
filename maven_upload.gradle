@@ -62,70 +62,59 @@ uploadArchives {
 //    }
 //
 //    task androidJavadocsJar(type: Zip, dependsOn: androidJavadocs) {
-//
-//
 //        classifier = 'javadoc'
 //        from androidJavadocs.destinationDir
 //    }
 
-//    task androidSourcesJar(type: Jar) {
-//
-//        classifier = 'sources'
-//
-//
-//        def sourceDirs = new ArrayList()
-//        def sourceDir = android.sourceSets.main.java.srcDirs
-//        sourceDirs.add(sourceDir)
-//
-//        println "base src： " + sourceDir
-//        android.libraryVariants.all { variant ->
-//
-//            println "variant.flavorName： " + variant.flavorName
-//
-//            if (variant.flavorName.empty) {
-//                return
-//            }
-//
-//            def variantSrc = android.sourceSets.(variant.flavorName).java.srcDirs
-//            if (!sourceDirs.contains(variantSrc)) {
-//                sourceDirs.add(variantSrc)
-//            }
-//
-//
-//            def flavors = variant.getProductFlavors()
-//            for (int i = 0; i < flavors.size(); i++) {
-//                if (!variant.flavorName.toLowerCase().contains(flavors[i].name.toLowerCase())) {
-//                    continue
-//                }
-//
-//                def flavorSrc = android.sourceSets.(flavors[i].name).java.srcDirs
-//                println "flavor src1： " + flavorSrc
-//
-//                if (!sourceDirs.contains(flavorSrc)) {
-//                    sourceDirs.add(flavorSrc)
-//                }
-//
-//            }
-//
-//        }
-//        from sourceDirs
-//
-//    }
+    task androidSourcesJar(type: Jar) {
+        description = 'Create sources JAR.'
+        classifier = 'sources'
 
-//    artifacts {
-//        if (project.hasProperty("HVI_SOURCE")) {
-//
-//        println "start packing sources >>>"
-//
-//        archives androidSourcesJar
-//        }
-//
-//        if (project.hasProperty("HVI_JAVADOC")) {
-//            println "start packing JavaDoc >>>"
-//
-//            archives androidJavadocsJar
-//        }
-//    }
+        def sourceDirs = new ArrayList()
+        def sourceDir = android.sourceSets.main.java.srcDirs
+        sourceDirs.add(sourceDir)
+
+        android.libraryVariants.all { variant ->
+
+            println "variant.flavorName： " + variant.flavorName
+
+            if (variant.flavorName.empty) {
+                return
+            }
+
+            def variantSrc = android.sourceSets.(variant.flavorName).java.srcDirs
+            if (!sourceDirs.contains(variantSrc)) {
+                sourceDirs.add(variantSrc)
+            }
+
+            def flavors = variant.getProductFlavors()
+            for (int i = 0; i < flavors.size(); i++) {
+                if (!variant.flavorName.toLowerCase().contains(flavors[i].name.toLowerCase())) {
+                    continue
+                }
+
+                def flavorSrc = android.sourceSets.(flavors[i].name).java.srcDirs
+                println "flavor src1： " + flavorSrc
+
+                if (!sourceDirs.contains(flavorSrc)) {
+                    sourceDirs.add(flavorSrc)
+                }
+
+            }
+
+            from sourceDirs
+        }
+
+    }
+
+    artifacts {
+
+        println "start packing sources >>>"
+        archives androidSourcesJar
+
+//        println "start packing JavaDoc >>>"
+//        archives androidJavadocsJar
+    }
 }
 
 // logic_account_china_hms

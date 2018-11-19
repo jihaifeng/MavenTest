@@ -25,9 +25,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url releaseRepositoryUrl }
         maven { url snapshotRepositoryUrl }
-        maven { url 'http://10.62.233.85:8081/nexus/content/repositories/snapshots/' }
     }
 }
 
