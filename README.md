@@ -1,5 +1,6 @@
 ### 今天主要实践一下利用gradle打包并上传aar到私有maven仓库的一些事情
 
+> ### 准备
 - 第一步，要上传aar到maven仓，起码得有一个maven仓吧，这里我们使用的是Nexus作为私有仓库，如果还没有Nexus仓库，请自行百度；
 
 - 第二步，要有一个带上传的module,例如本项目中的testlib和mytestlib;
@@ -7,7 +8,7 @@
 - 第三步，编写上传脚本，具体参考maven_upload.gradle;
 
 
-> ### 脚本编写，先设置maven仓库的地址，上传aar需要授权，所以要填入用户名和密码
+> ### 设置maven仓库的地址，上传aar需要授权，所以要填入用户名和密码
 ```
 apply plugin: 'maven'
 
