@@ -35,18 +35,37 @@ uploadArchives {
 
                     pom(_flavorBuildTypeName).groupId = repositoryGroup
                     pom(_flavorBuildTypeName).artifactId = artifactId
-                    pom(_flavorBuildTypeName).version = "1.0.3-SNAPSHOT"
+                    pom(_flavorBuildTypeName).version = "1.0.4-SNAPSHOT"
                     pom(_flavorBuildTypeName).name = artifactId
                     pom(_flavorBuildTypeName).packaging = 'aar'
 
+                    // 远程依赖一起打包进pom文件，解决传递引用
+                    pom(_flavorBuildTypeName).withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+                        configurations.compile.allDependencies.each {
+                            if (isValidDependency(it)) {
+//                                if (!configurations.embedded.allDependencies.contains(it)) {
+                                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                                    dependencyNode.appendNode('groupId', it.group)
+                                    dependencyNode.appendNode('artifactId', it.name)
+                                    dependencyNode.appendNode('version', it.version)
+//                                }
+                            }
+                        }
+                    }
                     curArtifactId = artifactId
 
                 } else {
-                    println "has the same artifactId." + curArtifactId
+                    println "has the same artifactId.curArtifactId = " + curArtifactId
                 }
+
+
             }
         }
     }
+
+
+
 
 //    task androidJavadocs(type: Javadoc) {
 //        failOnError false
@@ -58,6 +77,15 @@ uploadArchives {
 //        }
 //        classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
 //        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    android.libraryVariants.all { variant ->
+//        if (variant.name == 'release') {
+//            owner.classpath += variant.javaCompile.classpath
+//        }
+//    }
+//    exclude '**/R.html', '**/R.*.html', '**/index.html'
 //
 //    }
 //
@@ -69,27 +97,29 @@ uploadArchives {
     task androidSourcesJar(type: Jar) {
         description = 'Create sources JAR.'
         classifier = 'sources'
+        baseName "AAAAA"
 
         def sourceDirs = new ArrayList()
-        def sourceDir = android.sourceSets.main.java.srcDirs
-        sourceDirs.add(sourceDir)
+        def sourceMainDir = android.sourceSets.main.java.srcDirs
+        sourceDirs.add(sourceMainDir)
 
         android.libraryVariants.all { variant ->
 
-            println "variant.flavorName： " + variant.flavorName
+            def curFlavorName = variant.flavorName
 
-            if (variant.flavorName.empty) {
+            if (curFlavorName.empty) {
+                println "curFlavorName is empty.return"
                 return
             }
 
-            def variantSrc = android.sourceSets.(variant.flavorName).java.srcDirs
-            if (!sourceDirs.contains(variantSrc)) {
-                sourceDirs.add(variantSrc)
-            }
+            println "curFlavorName is = " + curFlavorName
 
             def flavors = variant.getProductFlavors()
             for (int i = 0; i < flavors.size(); i++) {
-                if (!variant.flavorName.toLowerCase().contains(flavors[i].name.toLowerCase())) {
+
+                println "flavors[i].name is = " + flavors[i].name
+
+                if (!curFlavorName.equalsIgnoreCase(flavors[i].name)) {
                     continue
                 }
 
@@ -99,9 +129,8 @@ uploadArchives {
                 if (!sourceDirs.contains(flavorSrc)) {
                     sourceDirs.add(flavorSrc)
                 }
-
             }
-
+            println ">>>>>> source packing end.sourceDirs = " + sourceDirs + " \n"
             from sourceDirs
         }
 
@@ -110,11 +139,17 @@ uploadArchives {
     artifacts {
 
         println "start packing sources >>>"
+
         archives androidSourcesJar
 
 //        println "start packing JavaDoc >>>"
 //        archives androidJavadocsJar
     }
+}
+
+static boolean isValidDependency(it) {
+    return null != it.group && (null != it.name || "unspecified" == it
+            .name) && null != it.version
 }
 
 // logic_account_china_hms
