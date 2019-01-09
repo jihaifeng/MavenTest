@@ -1,11 +1,7 @@
 apply plugin: 'com.android.library'
 
-//group repositoryGroup
-////version 1.0.0.301
-//version  '1.0.11-SNAPSHOT' //表示测试版，正式发版时去掉“-SNAPSHOT”
-
 //打成aar格式
-//apply from: rootProject.getRootDir().getAbsolutePath() + "/maven_upload.gradle" //引用上传插件
+apply from: rootProject.getRootDir().getAbsolutePath() + "/maven_upload.gradle" //引用上传插件
 
 
 android {
@@ -33,4 +29,5 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:27.1.1'
+//    compile 'com.huawei.android.hms:dynamic-module-client:1.0.0.105-SNAPSHOT'
 }
