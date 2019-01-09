@@ -52,7 +52,6 @@ uploadArchives {
                         }
                     }
                     curArtifactId = artifactId
-//                    artifacts = [androidSourcesJar]
                 } else {
                     println "has the same artifactId.curArtifactId = " + curArtifactId
                 }
@@ -141,8 +140,10 @@ uploadArchives {
 }
 
 static boolean isValidDependency(it) {
-    return null != it.group && (null != it.name || "unspecified" == it
-            .name) && null != it.version
+    return (null != it.group) &&
+            (null != it.name) &&
+            (!"unspecified".equalsIgnoreCase(it.name)) &&
+            (null != it.version)
 }
 
 // logic_account_china_hms

@@ -29,5 +29,5 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:27.1.1'
-//    compile 'com.huawei.android.hms:dynamic-module-client:1.0.0.105-SNAPSHOT'
+    compile 'com.huawei.android.hms:dynamic-module-client:1.0.0.105-SNAPSHOT'
 }
